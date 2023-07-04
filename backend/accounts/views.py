@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
+from .serializers import RegisterSerializer
+from rest_framework import generics
+from django.contrib.auth import get_user_model
 
 
 class HomeView(APIView):
@@ -27,3 +30,8 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class RegisterView(generics.CreateAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = RegisterSerializer

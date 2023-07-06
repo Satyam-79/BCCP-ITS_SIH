@@ -30,7 +30,10 @@
 3. Open your browser and visit: `http://localhost:8000`
 
 ## API
-product create require 
+##  POST
+### product createrequire 
+
+url: `product-create/`
 ```
     {
     "name":"Boxes",
@@ -40,7 +43,8 @@ product create require
 ```
 with auth token in the header
 
-register require as json
+### register as json
+url: `register/`
 ```
     email:user2@mail.com
     password:pY8JFRzCUPD4m9f
@@ -48,4 +52,38 @@ register require as json
     customer:False
     first_name:user
     last_name:two
+```
+### Login
+url: `login/`
+```
+    {
+    "email":"user@mail.com",
+    "passsword":"*******",
+    }
+```
+### Refresh auth token
+url: `login/refresh/`
+```
+    {
+    "refresh":"Refresh Token"
+    }
+```
+### Logout
+url: `logout/`
+```
+    "refresh_token":"refresh token"
+```
+
+
+## GET 
+### urls:
+
+```
+    "products/"
+
+```
+### Product Details
+url: `product/<str:pk>/`
+```
+    "refresh_token":"refresh token"
 ```

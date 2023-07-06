@@ -28,3 +28,24 @@
     ```
 
 3. Open your browser and visit: `http://localhost:8000`
+
+## API
+product create require 
+```
+    {
+    "name":"Boxes",
+    "description":"Cardboard boxex of size 3x4x3",
+    "tags":["cardboard","Wooden Box"]
+    }
+```
+with auth token in the header
+
+register require as json
+```
+    email:user2@mail.com
+    password:pY8JFRzCUPD4m9f
+    password2:pY8JFRzCUPD4m9f
+    customer:False
+    first_name:user
+    last_name:two
+```

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.core.validators import RegexValidator
 
 
 class UserManager(BaseUserManager):
@@ -102,3 +103,38 @@ class User(AbstractBaseUser):
     # @property
     # def is_active(self):
     #     return self.active
+
+
+class ProfileModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    address = models.CharField(max_length=500, null=True, blank=True)
+    phone_number = models.CharField(
+        max_length=10,
+        validators=[RegexValidator(r"^\+?1?\d{9,15}$")],
+        null=False,
+        blank=False,
+    )
+
+    def __str__(self):
+        return self.user.first_name
+
+
+class AddressModel(models.Model):
+    name = models.CharField(max_length=200, null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    phone_number = models.CharField(
+        max_length=10,
+        validators=[RegexValidator(r"^\+?1?\d{9,15}$")],
+        null=False,
+        blank=False,
+    )
+    pin_code = models.CharField(
+        max_length=6, validators=[RegexValidator(r"^\d{0,9}$")], null=False, blank=False
+    )
+    house_no = models.CharField(max_length=300, null=False, blank=False)
+    landmark = models.CharField(max_length=120, null=False, blank=False)
+    city = models.CharField(max_length=120, null=False, blank=False)
+    state = models.CharField(max_length=120, null=False, blank=False)
+
+    def __str__(self):
+        return self.name

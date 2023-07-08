@@ -84,6 +84,3 @@ url: `logout/`
 ```
 ### Product Details
 url: `product/<str:pk>/`
-```
-    "refresh_token":"refresh token"
-```

@@ -76,11 +76,8 @@ url: `logout/`
 
 
 ## GET 
-### urls:
+### Products list:
+url: `products/`
 
-```
-    "products/"
-
-```
 ### Product Details
 url: `product/<str:pk>/`

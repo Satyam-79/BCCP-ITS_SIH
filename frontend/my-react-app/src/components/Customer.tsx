@@ -50,7 +50,7 @@ const Customer = () => {
       e.preventDefault();
       const token = String(localStorage.getItem("token"));
       try {
-        const res: AxiosResponse<ResponseData> = await axios.put(
+        const res:any= await axios.put(
           `https://bccp.onrender.com/customer_verification/${selectedFormId}`,
           {
             verified_buyer: formInput.verified_buyer,
@@ -92,7 +92,7 @@ const Customer = () => {
   const handleGetRequest = async () => {
     try {
       const token = String(localStorage.getItem("token"));
-      const response: AxiosResponse<ResponseData, any> = await axios.get(
+      const response: any= await axios.get(
         `https://bccp.onrender.com/get_verified_forms`,
         {
           headers: {

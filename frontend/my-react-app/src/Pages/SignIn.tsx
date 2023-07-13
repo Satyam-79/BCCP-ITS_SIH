@@ -41,9 +41,9 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   // const [requestToken, setrequestToken] = React.useState();
 
-  const [redata, setRedata] = React.useState();
+  // const [redata, setRedata] = React.useState<any>();
 
-  const [user, setuser] = React.useState({
+  const [user, setuser] = React.useState<any>({
     username: "",
     password: ""
   });
@@ -71,8 +71,8 @@ export default function SignIn() {
       const res: AxiosResponse<ResponseData> = await axios.post("https://bccp.onrender.com/login", requestData);
       localStorage.setItem("token", res.data.access);
       await handleGetRequest();
-      setuser(res.data);
-      setRedata(res.data);
+      // setuser(res.data);
+      // setRedata(res.data);
       user_type_check();
    
     } catch (err) {
@@ -98,12 +98,14 @@ export default function SignIn() {
   const handleGetRequest = async () => {
     try {
       const token = String(localStorage.getItem("token"))
-        const response:AxiosResponse<ResponseData, any> = await axios.get(`https://bccp.onrender.com/get_user_type`, {
+        const response:any = await axios.get(`https://bccp.onrender.com/get_user_type`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json' // Set the appropriate content type for your request
         }
       });
+
+      
       
       localStorage.setItem("user_type", response.data.user_type);
     } catch (error) {

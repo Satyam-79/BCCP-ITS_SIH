@@ -24,10 +24,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const Supplier = () => {
-  const [open, setOpen] = React.useState(false);
-  const [buyerVerifiedForms, setBuyerVerifiedForms] = React.useState();
+  const [open, setOpen] = React.useState<any>(false);
+  const [buyerVerifiedForms, setBuyerVerifiedForms] = React.useState<any>();
   const [form, setForm] = React.useState([]);
-  const [supplierForm, setSupplierForm] = React.useState({
+  const [supplierForm, setSupplierForm] = React.useState<any>({
     laboratory: "1",
     sub_name: "",
     sub_address: "",
@@ -61,7 +61,7 @@ export const Supplier = () => {
   console.log(randomObject);
 
   const handleChangeHandler = (e: any) => {
-    setSupplierForm((prevState) => ({
+    setSupplierForm((prevState:any) => ({
       ...prevState,
       [e.target.name]: e.target.value
     }));
@@ -72,14 +72,14 @@ export const Supplier = () => {
     const file = e.target.files[0];
 
     if (file) {
-      setSupplierForm((prevState) => ({
+      setSupplierForm((prevState:any) => ({
         ...prevState,
         [e.target.name]: file
       }));
     }
   };
 
-  const submitHandler = async (e) => {
+  const submitHandler = async (e:any) => {
     e.preventDefault();
     const formData = new FormData();
 
@@ -94,7 +94,7 @@ export const Supplier = () => {
       console.log(`${key}: ${value}`);
     });
     try {
-      const res: AxiosResponse<ResponseData> = await axios.post(
+      const res:any= await axios.post(
         "https://bccp.onrender.com/send_supplier_form",
         formData
       );
@@ -124,7 +124,7 @@ export const Supplier = () => {
   const handleGetRequest = async () => {
     try {
       const token = String(localStorage.getItem("token"));
-      const response: AxiosResponse<ResponseData, any> = await axios.get(
+      const response:any = await axios.get(
         `https://bccp.onrender.com/get_verified_buyer`,
         {
           headers: {
@@ -259,8 +259,8 @@ export const Supplier = () => {
                       });
                     }}
                   >
-                    <MenuItem value={true}>Active</MenuItem>
-                    <MenuItem value={false}>Inactive</MenuItem>
+                    <MenuItem value={String(true)}>Active</MenuItem>
+                    <MenuItem value={String(false)}>Inactive</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

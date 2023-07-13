@@ -27,17 +27,17 @@ export const Lab = () => {
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = useState([]);
   const [selectedFormId, setSelectedFormId] = useState(null);
-  const [formInput, setFormInput] = useState({
+  const [formInput, setFormInput] = useState<any>({
     test_result_image: null,
     status: "Pending",
   });
 
-  const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const fileHandler = (e: any) => {
     e.preventDefault();
     const file = e.target.files[0];
 
     if (file) {
-      setFormInput((prevState) => ({
+      setFormInput((prevState:any) => ({
         ...prevState,
         [e.target.name]: file,
       }));
@@ -55,7 +55,7 @@ export const Lab = () => {
         console.log(`${key}: ${value}`);
       });
       try {
-        const res: AxiosResponse<ResponseData> = await axios.put(
+        const res: any = await axios.put(
           `https://bccp.onrender.com/update_form_status/${selectedFormId}`,
           formData
         );
@@ -89,7 +89,7 @@ export const Lab = () => {
   const handleGetRequest = async () => {
     try {
       const token = String(localStorage.getItem("token"));
-      const response: AxiosResponse<ResponseData, any> = await axios.get(
+      const response:any= await axios.get(
         `https://bccp.onrender.com/get_lab_forms`,
         {
           headers: {

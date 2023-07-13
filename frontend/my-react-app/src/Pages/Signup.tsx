@@ -3,12 +3,9 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -19,6 +16,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Select } from "@mui/material";
 
 function Copyright(props: any) {
   return (
@@ -57,7 +55,7 @@ export default function Signup() {
     password: ""
   });
 
-  const signupHandler = async (e) => {
+  const signupHandler = async (e:any) => {
     e.preventDefault();
     const requestData: Signup = {
       user_type: signupData.user_type,
@@ -164,7 +162,7 @@ export default function Signup() {
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
                     value={signupData.user_type}
-                    onChange={(e) => {
+                    onChange={(e:any) => {
                       setSignupData({
                         ...signupData,
                         user_type: e.target.value

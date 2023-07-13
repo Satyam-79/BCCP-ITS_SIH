@@ -5,28 +5,25 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import Link from "@mui/material/Link";
+
 import Grid from "@mui/material/Grid";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import "../App.css";
 import { Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const Supplier = () => {
   const [open, setOpen] = React.useState<any>(false);
   const [buyerVerifiedForms, setBuyerVerifiedForms] = React.useState<any>();
-  const [form, setForm] = React.useState([]);
   const [supplierForm, setSupplierForm] = React.useState<any>({
     laboratory: "1",
     sub_name: "",
@@ -48,7 +45,11 @@ export const Supplier = () => {
     { id: 3, name: "Precision Testing Solutions" },
     { id: 4, name: "Metallurgical Testing Services" },
     { id: 5, name: "Composite Materials Testing Laboratory" },
-    { id: 6, name: "Structural Integrity Testing Lab" }
+    { id: 6, name: "Structural Integrity Testing Lab" },
+    { id: 7, name: "National Test House for Chemicals" },
+    { id: 8, name: "TUV Rheinland" },
+    { id: 9, name: "Intertek" },
+    { id: 10, name: "Central Manufacturing Technology Institute" },
     // Add more objects as needed
   ];
 
@@ -118,7 +119,7 @@ export const Supplier = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_type");
-    navigate("/signin");
+    navigate("/");
   };
 
   const handleGetRequest = async () => {
@@ -400,17 +401,18 @@ export const Supplier = () => {
       <Box p={3} sx={{ display: "flex" }}>
         {buyerVerifiedForms?.map((formData: any) => (
           <Box
-            className="rounded"
+            className="rounded align-items-center"
             key={formData.id}
             m={2}
             p={4}
-            sx={{ background: "white", height: "250px", width: "400px" }}
+            sx={{ background: "white", height: "120px", width: "400px" }}
           >
             <Box p={2}>
-              <>
-                <Chip icon={<DoneAllIcon />} label="Verified Buyer" />
-              </>
+              <div className="float-right">
+                <Chip color="primary" icon={<DoneAllIcon />} label="Verified Buyer" />
+              </div>
               <p>{formData.product_name}</p>
+              
             </Box>
           </Box>
         ))}

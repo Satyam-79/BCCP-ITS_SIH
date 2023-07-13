@@ -140,6 +140,7 @@ export default function SignIn() {
           >
             <LockOutlinedIcon />
           </Avatar>
+          <Typography sx={{fontSize:"15px",textAlign:"center"}}>Business Accreditation and Certification Platform</Typography>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
@@ -200,7 +201,7 @@ export default function SignIn() {
               <Grid item>
                 <Link
                   onClick={() => {
-                    navigate("/");
+                    navigate("/signup");
                   }}
                   variant="body2"
                   style={{cursor:"pointer"}}

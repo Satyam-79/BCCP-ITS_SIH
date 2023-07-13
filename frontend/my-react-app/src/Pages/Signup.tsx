@@ -190,7 +190,7 @@ export default function Signup() {
               <Grid item>
                 <Link
                   onClick={() => {
-                    navigate("signin");
+                    navigate("/");
                   }}
                   variant="body2"
                   style={{cursor:"pointer"}}

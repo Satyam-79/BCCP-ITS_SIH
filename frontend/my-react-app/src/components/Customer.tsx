@@ -1,41 +1,22 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import TextField from "@mui/material/TextField";
+
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+
 import ReceiptIcon from "@mui/icons-material/Receipt";
-import Paper from "@mui/material/Paper";
-import { alpha, styled } from "@mui/material/styles";
 import { pink } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
 
-const PinkSwitch = styled(Switch)(({ theme }) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: pink[600],
-    "&:hover": {
-      backgroundColor: alpha(pink[600], theme.palette.action.hoverOpacity)
-    }
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: pink[600]
-  }
-}));
+
 
 const Customer = () => {
   const [open, setOpen] = React.useState(false);
@@ -86,7 +67,7 @@ const Customer = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_type");
-    navigate("/signin");
+    navigate("/");
   };
 
   const handleGetRequest = async () => {

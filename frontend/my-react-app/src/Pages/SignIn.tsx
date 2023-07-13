@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AxiosResponse } from "axios";
+
 
 function Copyright(props: any) {
   return (
@@ -46,79 +48,70 @@ export default function SignIn() {
     password: ""
   });
 
-  const [usertype, setUsertype] = React.useState();
 
   const navigate = useNavigate();
-
-  function loginhandler() {
-    axios
-      .post(
-        "https://bccp.onrender.com/login",
-
-        {
-          username: user.username,
-          password: user.password
-        }
-      )
-      .then((res) => {
-        // localStorage.setItem("success", res.data.success);
-        localStorage.setItem("token", res.data.access);
-        // axios.defaults.headers.common['Authorization'] = 
-        //                                  `Bearer ${res.data['access']}`;
-        // setuser(res.data);
-        // console.log(res.data.access);
-
-        setRedata(res.data);
-        navigate("/supplier");
-        handleGetRequest();
-    
-      })
-      .catch((err) => console.log(err.response.data.status_message));
+  interface UserData {
+    username: string;
+    password: string;
+  }
+  
+  interface ResponseData {
+    access: string;
+    // Add other properties of the response if applicable
+  }
+  
+  // Assuming user and navigate are properly defined
+  const loginHandler = async () => {
+    const requestData: UserData = {
+      username: String(user.username),
+      password: String(user.password)
+    };
+  
+    try {
+      const res: AxiosResponse<ResponseData> = await axios.post("https://bccp.onrender.com/login", requestData);
+      localStorage.setItem("token", res.data.access);
+      await handleGetRequest();
+      setuser(res.data);
+      setRedata(res.data);
+      user_type_check();
+   
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  // function userHandler() {
-  //   const token = localStorage.getItem("token");
-
-  //   // const config = {
-      
-  //   // };
-
+  const user_type_check = () =>{
+   const type =  localStorage.getItem("user_type");
+   console.log(type);
    
-  //   axios({
-  //     method: 'get',
-  //     url: `http://bccp.onrender.com/get_user_type`,
-  //     withCredentials: true,
-    
-  //   })
-  //     .then((res) =>{ 
-  //       console.log(res.data);
-  //       setUsertype(res.data)});
-  // }
-
+   if(type === "S"){
+    navigate("/supplier");
+   }else if(type === "C"){
+    navigate("/customer");
+   }else if(type === "L"){
+    navigate("/lab");
+   }else {
+    navigate("/signin");
+   }
+  }
 
   const handleGetRequest = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://bccp.onrender.com/get_user_type', {
+      const token = String(localStorage.getItem("token"))
+        const response:AxiosResponse<ResponseData, any> = await axios.get(`https://bccp.onrender.com/get_user_type`, {
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' // Set the appropriate content type for your request
+        }
       });
-      // Handle response data
+      
+      localStorage.setItem("user_type", response.data.user_type);
     } catch (error) {
-      // Handle error
+      // Handle any errors
+      console.error(error);
     }
   };
-  // React.useEffect(() => {
-  //   axios
-  //     .get(
-  //       "http://bccp.onrender.com/get_user_type"
-
-  //     )
-  //     .then((res) => setUsertype(res.data));
-
-  // }, []);
-
+    
  
 
   return (
@@ -195,7 +188,7 @@ export default function SignIn() {
             <Button
               // type="submit"
               fullWidth
-              onClick={loginhandler}
+              onClick={loginHandler}
               variant="contained"
               sx={{ mt: 3, mb: 2, background: " #5e86fa" }}
             >
@@ -208,6 +201,7 @@ export default function SignIn() {
                     navigate("/");
                   }}
                   variant="body2"
+                  style={{cursor:"pointer"}}
                 >
                   {"Don't have an account? Sign Up"}
                 </Link>

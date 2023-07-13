@@ -19,9 +19,71 @@ import Grid from "@mui/material/Grid";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import "../App.css";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const Supplier = () => {
   const [open, setOpen] = React.useState(false);
+  const [supplierForm, setSupplierForm] = React.useState({
+    laboratory: "1",
+    sub_name: "",
+    sub_address: "",
+    sub_proof: null,
+    product_name: "",
+    product_image: null,
+    certificate_image: null,
+    accreditation_image: null,
+    agency_name: "",
+    accreditation_id: "",
+    accreditation_name: "startupindia",
+    accreditation_active_status: false,
+  });
+
+  const handleChangeHandler = (e) => {
+    setSupplierForm((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+
+    if (file) {
+      setSupplierForm((prevState) => ({
+        ...prevState,
+        [e.target.name]: file,
+      }));
+    }
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    // Append all the form values to the FormData object
+    Object.keys(supplierForm).forEach((key) => {
+      if (supplierForm[key] !== null) {
+        formData.append(key, supplierForm[key]);
+      }
+    });
+
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    try {
+      const res: AxiosResponse<ResponseData> = await axios.post(
+        "https://bccp.onrender.com/send_supplier_form",
+        formData
+      );
+      console.log(res.data);
+      window.alert("form is submitted");
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,18 +93,24 @@ export const Supplier = () => {
     setOpen(false);
   };
 
-  const handleSubmit = () => {};
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_type");
+    navigate("/signin");
+  };
   return (
     <>
       <Box
         sx={{
-          flexGrow: 1
+          flexGrow: 1,
         }}
       >
         <AppBar
           sx={{
             backgroundImage:
-              "linear-gradient(to right top, #3b8efc, #5e86fa, #7a7df6, #9273ef, #a768e6, #9974f0, #8a7ff8, #7a89ff, #20a4ff, #00baff, #00cbfd, #12daec)"
+              "linear-gradient(to right top, #3b8efc, #5e86fa, #7a7df6, #9273ef, #a768e6, #9974f0, #8a7ff8, #7a89ff, #20a4ff, #00baff, #00cbfd, #12daec)",
           }}
           position="static"
         >
@@ -62,7 +130,9 @@ export const Supplier = () => {
             <Button color="inherit" onClick={handleClickOpen}>
               Add Supplier
             </Button>
-            <Button color="inherit">Logout</Button>
+            <Button onClick={handleLogout} color="inherit">
+              Logout
+            </Button>
           </Toolbar>
         </AppBar>
       </Box>
@@ -76,7 +146,7 @@ export const Supplier = () => {
           </DialogContentText>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={submitHandler}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -88,9 +158,11 @@ export const Supplier = () => {
                   required
                   fullWidth
                   label="Supplier Name"
-                  name="text"
+                  name="sub_name"
                   autoComplete="email"
                   autoFocus
+                  value={supplierForm.sub_name}
+                  onChange={handleChangeHandler}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -99,20 +171,11 @@ export const Supplier = () => {
                   size="small"
                   required
                   fullWidth
-                  name="Supplier Address"
-                  label="Supplier Address"
-                  type="text"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  margin="normal"
-                  size="small"
-                  required
-                  fullWidth
-                  name="Product Name"
+                  name="product_name"
                   label="Product Name"
                   type="text"
+                  value={supplierForm.product_name}
+                  onChange={handleChangeHandler}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -121,22 +184,14 @@ export const Supplier = () => {
                   size="small"
                   required
                   fullWidth
-                  name="Agency Name"
+                  name="agency_name"
                   label="Agency Name"
                   type="text"
+                  value={supplierForm.agency_name}
+                  onChange={handleChangeHandler}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  margin="normal"
-                  size="small"
-                  required
-                  fullWidth
-                  name="Accredition Name"
-                  label="Accredition Name"
-                  type="text"
-                />
-              </Grid>
+
               <Grid className="mt-3" item xs={6}>
                 <FormControl size="small" sx={{ width: "100%" }}>
                   <InputLabel id="demo-simple-select-autowidth-label">
@@ -146,13 +201,18 @@ export const Supplier = () => {
                     fullWidth
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    // value={signupData.usertype}
-
                     autoWidth
                     label="Select User"
+                    value={supplierForm.accreditation_active_status}
+                    onChange={(e) => {
+                      setSupplierForm({
+                        ...supplierForm,
+                        accreditation_active_status: e.target.value,
+                      });
+                    }}
                   >
-                    <MenuItem value="Customer">Active</MenuItem>
-                    <MenuItem value="Supplier">Inactive</MenuItem>
+                    <MenuItem value={true}>Active</MenuItem>
+                    <MenuItem value={false}>Inactive</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -162,9 +222,11 @@ export const Supplier = () => {
                   size="small"
                   required
                   fullWidth
-                  name="Accredition ID"
+                  name="accreditation_id"
                   label="Accredition ID"
                   type="text"
+                  value={supplierForm.accreditation_id}
+                  onChange={handleChangeHandler}
                 />
               </Grid>
               <Grid className="mt-3" item xs={6}>
@@ -176,13 +238,57 @@ export const Supplier = () => {
                     fullWidth
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    // value={signupData.usertype}
-
+                    value={supplierForm.accreditation_name}
                     autoWidth
                     label="Select User"
+                    onChange={(e) => {
+                      setSupplierForm({
+                        ...supplierForm,
+                        accreditation_name: e.target.value,
+                      });
+                    }}
                   >
-                    <MenuItem value="Customer">Startup India</MenuItem>
-                    <MenuItem value="Supplier">Asme</MenuItem>
+                    <MenuItem value="startupindia">Startup India</MenuItem>
+                    <MenuItem value="asme">Asme</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  margin="normal"
+                  size="small"
+                  required
+                  fullWidth
+                  name="sub_address"
+                  label="Supplier Address"
+                  type="text"
+                  value={supplierForm.sub_address}
+                  onChange={handleChangeHandler}
+                />
+              </Grid>
+              <Grid className="mt-3" item xs={6}>
+                <FormControl size="small" sx={{ width: "100%" }}>
+                  <InputLabel id="demo-simple-select-autowidth-label">
+                    laboratory
+                  </InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    value={supplierForm.laboratory}
+                    autoWidth
+                    label="Select User"
+                    onChange={(e) => {
+                      setSupplierForm({
+                        ...supplierForm,
+                        laboratory: e.target.value,
+                      });
+                    }}
+                  >
+                    <MenuItem value="1">National Test House</MenuItem>
+                    <MenuItem value="2">MSME Testing Station</MenuItem>
+                    <MenuItem value="3">National Metallurgical Laboratory</MenuItem>
+                  
                   </Select>
                 </FormControl>
               </Grid>
@@ -191,49 +297,57 @@ export const Supplier = () => {
                   <label>Product Image</label>
                   <input
                     type="file"
+                    name="product_image"
                     className="form-control-file"
                     id="exampleFormControlFile1"
+                    onChange={fileHandler}
                   />
                 </div>
               </Grid>
 
               <Grid item xs={6}>
-              <div className="form-group">
+                <div className="form-group">
                   <label>Certificate Image</label>
                   <input
+                    name="certificate_image"
                     type="file"
                     className="form-control-file"
                     id="exampleFormControlFile1"
+                    onChange={fileHandler}
                   />
                 </div>
               </Grid>
               <Grid item xs={6}>
-              <div className="form-group">
+                <div className="form-group">
                   <label>Supplier proof</label>
                   <input
                     type="file"
+                    name="sub_proof"
                     className="form-control-file"
                     id="exampleFormControlFile1"
+                    onChange={fileHandler}
                   />
                 </div>
               </Grid>
               <Grid item xs={6}>
-              <div className="form-group">
+                <div className="form-group">
                   <label>Accredition Image</label>
                   <input
                     type="file"
+                    name="accreditation_image"
                     className="form-control-file"
                     id="exampleFormControlFile1"
+                    onChange={fileHandler}
                   />
                 </div>
               </Grid>
             </Grid>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button type="submit">Save</Button>
+            </DialogActions>
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Save</Button>
-        </DialogActions>
       </Dialog>
     </>
   );

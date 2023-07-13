@@ -18,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Copyright(props: any) {
   return (
@@ -44,32 +45,38 @@ export default function Signup() {
   const navigate = useNavigate();
   type Signup = {
     
-    usertype: String;
-    email: String;
-    password: String;
+    user_type: string;
+    username: string;
+    password: string;
   };
 
   const [signupData, setSignupData] = React.useState<Signup>({
    
-    usertype: "",
-    email: "",
+    user_type: "C",
+    username: "",
     password: ""
   });
-  console.log(signupData);
-  const [age, setAge] = React.useState("");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+  const signupHandler = async (e) => {
+    e.preventDefault();
+    const requestData: Signup = {
+      user_type: signupData.user_type,
+      username: signupData.username,
+      password: signupData.password
+    };
+  
+    try {
+      const res = await axios.post("https://bccp.onrender.com/create_user", requestData);
+      // Handle the response as needed
+      console.log(res.data);
+      // Redirect or perform any necessary actions
+      // navigate("/signin");
+    } catch (err) {
+      console.log(err);
+    }
   };
+  
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password")
-    });
-  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -98,7 +105,7 @@ export default function Signup() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={signupHandler}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
@@ -107,14 +114,14 @@ export default function Signup() {
                   required
                   fullWidth
                   id="email"
-                  value={signupData.email}
+                  value={signupData.username}
                   label="Email Address"
                   name="email"
                   autoComplete="email"
                   onChange={(e) => {
                     setSignupData({
                       ...signupData,
-                      email: e.target.value
+                      username: e.target.value
                     });
                   }}
                 />
@@ -149,25 +156,25 @@ export default function Signup() {
               <Grid item xs={12}>
                 <FormControl sx={{ width: "100%" }}>
                   <InputLabel id="demo-simple-select-autowidth-label">
-                    Select User
+                    User Type
                   </InputLabel>
                   <Select
                     fullWidth
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    value={signupData.usertype}
+                    value={signupData.user_type}
                     onChange={(e) => {
                       setSignupData({
                         ...signupData,
-                        usertype: e.target.value
+                        user_type: e.target.value
                       });
                     }}
                     autoWidth
                     label="Select User"
                   >
-                    <MenuItem value="Customer">Customer</MenuItem>
-                    <MenuItem value="Supplier">Supplier</MenuItem>
-                    <MenuItem value="Laboratory">Laboratory</MenuItem>
+                    <MenuItem value="C">Customer</MenuItem>
+                    <MenuItem value="S">Supplier</MenuItem>
+                    <MenuItem value="L">Laboratory</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -187,6 +194,7 @@ export default function Signup() {
                     navigate("signin");
                   }}
                   variant="body2"
+                  style={{cursor:"pointer"}}
                 >
                   Already have an account? Sign in
                 </Link>

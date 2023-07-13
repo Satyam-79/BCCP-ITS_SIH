@@ -24,6 +24,7 @@ import axios from "axios";
 
 export const Supplier = () => {
   const [open, setOpen] = React.useState(false);
+  const [buyerVerifiedForms, setBuyerVerifiedForms] = React.useState(false);
   const [supplierForm, setSupplierForm] = React.useState({
     laboratory: "1",
     sub_name: "",
@@ -100,6 +101,29 @@ export const Supplier = () => {
     localStorage.removeItem("user_type");
     navigate("/signin");
   };
+
+  const handleGetRequest = async () => {
+    try {
+      const token = String(localStorage.getItem("token"));
+      const response: AxiosResponse<ResponseData, any> = await axios.get(
+        `https://bccp.onrender.com/get_verified_buyer`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // Set the appropriate content type for your request
+          },
+        }
+      );
+      setBuyerVerifiedForms(response.data);
+    } catch (error) {
+      // Handle any errors
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetRequest();
+  }, []);
   return (
     <>
       <Box
@@ -135,6 +159,11 @@ export const Supplier = () => {
             </Button>
           </Toolbar>
         </AppBar>
+      </Box>
+      <Box>
+        {buyerVerifiedForms.map((data)=>(
+          <p>{data.verified_buyer}</p>
+        ))}
       </Box>
 
       <Dialog open={open} onClose={handleClose}>

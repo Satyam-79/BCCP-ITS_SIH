@@ -138,7 +138,7 @@ export const Lab = () => {
               <ReceiptIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Trade Connectivity
+            BACP
             </Typography>
             <Button onClick={handleLogout} color="inherit">
               Logout

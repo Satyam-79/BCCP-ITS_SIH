@@ -48,13 +48,18 @@ const Customer = () => {
   const submitHandler = async (e: any) => {
     if (selectedFormId !== null) {
       e.preventDefault();
-   
-      
+      const token = String(localStorage.getItem("token"));
       try {
         const res: AxiosResponse<ResponseData> = await axios.put(
           `https://bccp.onrender.com/customer_verification/${selectedFormId}`,
           {
-            verified_buyer:formInput.verified_buyer
+            verified_buyer: formInput.verified_buyer,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json", // Set the appropriate content type for your request
+            },
           }
         );
         console.log(res.data);
@@ -64,8 +69,6 @@ const Customer = () => {
       }
     }
   };
-
- 
 
   const handleClickOpen = (formId: any) => {
     setSelectedFormId(formId);
@@ -134,7 +137,7 @@ const Customer = () => {
               <ReceiptIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Trade Connectivity
+            BACP
             </Typography>
             <Button onClick={handleLogout} color="inherit">
               Logout
@@ -195,19 +198,18 @@ const Customer = () => {
                 )}
               </div>
             ))}
-            <Switch
+            <Switch sx={{ color: pink[600]}}
               checked={formInput.verified_buyer}
-              onChange={(e:any) => {
-               
-                setFormInput({
-                  ...formInput,
-                  verified_buyer: !formInput.verified_buyer
-                });
+              onChange={() => {
+                setFormInput((prevState) => ({
+                  ...prevState,
+                  verified_buyer: !prevState.verified_buyer
+                }));
                 console.log(!formInput.verified_buyer);
-                submitHandler(e)
+               
               }}
-              
             />
+            <Button onClick={submitHandler}>apply</Button>
           </DialogContent>
         </Dialog>
       </Box>

@@ -99,6 +99,7 @@ export default function Signup() {
           >
             <LockOutlinedIcon />
           </Avatar>
+          <Typography>Business accreditation and certification platform</Typography>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>

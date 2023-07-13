@@ -14,17 +14,19 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import "../App.css";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const Supplier = () => {
   const [open, setOpen] = React.useState(false);
-  const [buyerVerifiedForms, setBuyerVerifiedForms] = React.useState(false);
+  const [buyerVerifiedForms, setBuyerVerifiedForms] = React.useState();
+  const [form, setForm] = React.useState([]);
   const [supplierForm, setSupplierForm] = React.useState({
     laboratory: "1",
     sub_name: "",
@@ -37,24 +39,42 @@ export const Supplier = () => {
     agency_name: "",
     accreditation_id: "",
     accreditation_name: "startupindia",
-    accreditation_active_status: false,
+    accreditation_active_status: false
   });
 
-  const handleChangeHandler = (e) => {
+  const data = [
+    { id: 1, name: " Advanced Materials Testing Laboratory" },
+    { id: 2, name: "Materials Analysis and Testing Laboratory" },
+    { id: 3, name: "Precision Testing Solutions" },
+    { id: 4, name: "Metallurgical Testing Services" },
+    { id: 5, name: "Composite Materials Testing Laboratory" },
+    { id: 6, name: "Structural Integrity Testing Lab" }
+    // Add more objects as needed
+  ];
+
+  const getRandomObject = () => {
+    const randomIndex = Math.floor(Math.random() * data.length);
+    return data[randomIndex];
+  };
+
+  const randomObject = getRandomObject();
+  console.log(randomObject);
+
+  const handleChangeHandler = (e: any) => {
     setSupplierForm((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     }));
   };
 
-  const fileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const fileHandler = (e: any) => {
     e.preventDefault();
     const file = e.target.files[0];
 
     if (file) {
       setSupplierForm((prevState) => ({
         ...prevState,
-        [e.target.name]: file,
+        [e.target.name]: file
       }));
     }
   };
@@ -64,7 +84,7 @@ export const Supplier = () => {
     const formData = new FormData();
 
     // Append all the form values to the FormData object
-    Object.keys(supplierForm).forEach((key) => {
+    Object.keys(supplierForm).forEach((key: any) => {
       if (supplierForm[key] !== null) {
         formData.append(key, supplierForm[key]);
       }
@@ -80,7 +100,6 @@ export const Supplier = () => {
       );
       console.log(res.data);
       window.alert("form is submitted");
-      
     } catch (err) {
       console.log(err);
     }
@@ -110,8 +129,8 @@ export const Supplier = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // Set the appropriate content type for your request
-          },
+            "Content-Type": "application/json" // Set the appropriate content type for your request
+          }
         }
       );
       setBuyerVerifiedForms(response.data);
@@ -121,20 +140,20 @@ export const Supplier = () => {
     }
   };
 
-  // React.useEffect(() => {
-  //   handleGetRequest();
-  // }, []);
+  React.useEffect(() => {
+    handleGetRequest();
+  }, []);
   return (
     <>
       <Box
         sx={{
-          flexGrow: 1,
+          flexGrow: 1
         }}
       >
         <AppBar
           sx={{
             backgroundImage:
-              "linear-gradient(to right top, #3b8efc, #5e86fa, #7a7df6, #9273ef, #a768e6, #9974f0, #8a7ff8, #7a89ff, #20a4ff, #00baff, #00cbfd, #12daec)",
+              "linear-gradient(to right top, #3b8efc, #5e86fa, #7a7df6, #9273ef, #a768e6, #9974f0, #8a7ff8, #7a89ff, #20a4ff, #00baff, #00cbfd, #12daec)"
           }}
           position="static"
         >
@@ -149,7 +168,7 @@ export const Supplier = () => {
               <ReceiptIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Trade Connectivity
+              BACP
             </Typography>
             <Button color="inherit" onClick={handleClickOpen}>
               Add Supplier
@@ -236,7 +255,7 @@ export const Supplier = () => {
                     onChange={(e) => {
                       setSupplierForm({
                         ...supplierForm,
-                        accreditation_active_status: e.target.value,
+                        accreditation_active_status: e.target.value
                       });
                     }}
                   >
@@ -273,7 +292,7 @@ export const Supplier = () => {
                     onChange={(e) => {
                       setSupplierForm({
                         ...supplierForm,
-                        accreditation_name: e.target.value,
+                        accreditation_name: e.target.value
                       });
                     }}
                   >
@@ -310,14 +329,13 @@ export const Supplier = () => {
                     onChange={(e) => {
                       setSupplierForm({
                         ...supplierForm,
-                        laboratory: e.target.value,
+                        laboratory: e.target.value
                       });
                     }}
                   >
-                    <MenuItem value="1">National Test House</MenuItem>
-                    <MenuItem value="2">MSME Testing Station</MenuItem>
-                    <MenuItem value="3">National Metallurgical Laboratory</MenuItem>
-                  
+                    <MenuItem value={randomObject.id}>
+                      {randomObject.name}
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -378,6 +396,25 @@ export const Supplier = () => {
           </Box>
         </DialogContent>
       </Dialog>
+
+      <Box p={3} sx={{ display: "flex" }}>
+        {buyerVerifiedForms?.map((formData: any) => (
+          <Box
+            className="rounded"
+            key={formData.id}
+            m={2}
+            p={4}
+            sx={{ background: "white", height: "250px", width: "400px" }}
+          >
+            <Box p={2}>
+              <>
+                <Chip icon={<DoneAllIcon />} label="Verified Buyer" />
+              </>
+              <p>{formData.product_name}</p>
+            </Box>
+          </Box>
+        ))}
+      </Box>
     </>
   );
 };

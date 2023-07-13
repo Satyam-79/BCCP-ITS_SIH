@@ -23,6 +23,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import Paper from "@mui/material/Paper";
 
 export const Lab = () => {
+
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = useState([]);
   const [selectedFormId, setSelectedFormId] = useState(null);
@@ -43,7 +44,7 @@ export const Lab = () => {
     }
   };
 
-  const submitHandler = async (e) => {
+  const submitHandler = async (e:any) => {
     if (selectedFormId !== null) {
       e.preventDefault();
       const formData = new FormData();
@@ -66,7 +67,7 @@ export const Lab = () => {
     }
   };
 
-  const handleClickOpen = (formId) => {
+  const handleClickOpen = (formId:any) => {
     setSelectedFormId(formId);
     console.log(selectedFormId);
 
@@ -97,12 +98,16 @@ export const Lab = () => {
           },
         }
       );
+
       setForm(response.data);
     } catch (error) {
       // Handle any errors
       console.error(error);
     }
   };
+
+
+
 
   useEffect(() => {
     handleGetRequest();
@@ -142,30 +147,30 @@ export const Lab = () => {
         </AppBar>
       </Box>
       <Box>
-        <Typography m={3} variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Laboratory Page
+        <Typography mx={3} mt={3} variant="h5" component="div" sx={{ flexGrow: 1,fontWeight:"600",color:"" }}>
+          Laboratory 
         </Typography>
 
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {form?.map((formData) => (
-            <Box
+        <Box p={3} sx={{ display: "flex" }}>
+          {form?.map((formData:any) => (
+            <Box className="rounded"
               key={formData.id}
-              m={2}
-              sx={{ background: "white", height: "200px", width: "400px" }}
+              m={2} p={4}
+              sx={{ background: "white", height: "250px", width: "400px" }}
             >
               <Box p={2}>
                 <>
-                  <p>{formData.sub_name}</p>
+                  <h5>{formData.sub_name}</h5>
                   <p>{formData.sub_address}</p>
                   <p>{formData.product_name}</p>
                   <p>{formData.accreditation_active_status}</p>
                 </>
               </Box>
-              <Button
-                color="inherit"
+              <Button variant="outlined"
+               color="secondary"
                 onClick={() => handleClickOpen(formData.id)}
               >
-                Approve Supplier Form
+                Approve Supplier
               </Button>
             </Box>
           ))}

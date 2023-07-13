@@ -21,18 +21,71 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import Paper from "@mui/material/Paper";
+import { alpha, styled } from "@mui/material/styles";
+import { pink } from "@mui/material/colors";
+import Switch from "@mui/material/Switch";
 
+const PinkSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: pink[600],
+    "&:hover": {
+      backgroundColor: alpha(pink[600], theme.palette.action.hoverOpacity)
+    }
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: pink[600]
+  }
+}));
 
 const Customer = () => {
-  
+  const [open, setOpen] = React.useState(false);
+  const [form, setForm] = useState([]);
+  const [selectedFormId, setSelectedFormId] = useState(null);
+  const [formInput, setFormInput] = useState({
+    verified_buyer: false
+  });
+
+  const submitHandler = async (e: any) => {
+    if (selectedFormId !== null) {
+      e.preventDefault();
+   
+      
+      try {
+        const res: AxiosResponse<ResponseData> = await axios.put(
+          `https://bccp.onrender.com/customer_verification/${selectedFormId}`,
+          {
+            verified_buyer:formInput.verified_buyer
+          }
+        );
+        console.log(res.data);
+        window.alert("form is submitted");
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+ 
+
+  const handleClickOpen = (formId: any) => {
+    setSelectedFormId(formId);
+    console.log(selectedFormId);
+
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_type");
     navigate("/signin");
   };
 
-  
   const handleGetRequest = async () => {
     try {
       const token = String(localStorage.getItem("token"));
@@ -41,10 +94,11 @@ const Customer = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // Set the appropriate content type for your request
-          },
+            "Content-Type": "application/json" // Set the appropriate content type for your request
+          }
         }
       );
+
       setForm(response.data);
     } catch (error) {
       // Handle any errors
@@ -55,18 +109,17 @@ const Customer = () => {
   useEffect(() => {
     handleGetRequest();
   }, []);
-
   return (
     <>
-    <Box
+      <Box
         sx={{
-          flexGrow: 1,
+          flexGrow: 1
         }}
       >
         <AppBar
           sx={{
             backgroundImage:
-              "linear-gradient(to right top, #3b8efc, #5e86fa, #7a7df6, #9273ef, #a768e6, #9974f0, #8a7ff8, #7a89ff, #20a4ff, #00baff, #00cbfd, #12daec)",
+              "linear-gradient(to right top, #3b8efc, #5e86fa, #7a7df6, #9273ef, #a768e6, #9974f0, #8a7ff8, #7a89ff, #20a4ff, #00baff, #00cbfd, #12daec)"
           }}
           position="static"
         >
@@ -88,9 +141,78 @@ const Customer = () => {
             </Button>
           </Toolbar>
         </AppBar>
+        <Typography
+          mx={3}
+          mt={3}
+          variant="h5"
+          component="div"
+          sx={{ flexGrow: 1, fontWeight: "600", color: "" }}
+        >
+          Customer
+        </Typography>
+        <Box p={3} sx={{ display: "flex" }}>
+          {form?.map((formData: any) => (
+            <Box
+              className="rounded"
+              key={formData.id}
+              m={2}
+              p={4}
+              sx={{ background: "white", height: "250px", width: "400px" }}
+            >
+              <Box p={2}>
+                <>
+                  <h5>{formData.sub_name}</h5>
+                  <p>{formData.sub_address}</p>
+                  <p>{formData.product_name}</p>
+                  <p>{formData.accreditation_active_status}</p>
+                </>
+              </Box>
+              <div className="d-flex">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => handleClickOpen(formData.id)}
+                >
+                  Approve Supplier
+                </Button>
+              </div>
+            </Box>
+          ))}
+        </Box>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>SUPPLIER NAME</DialogTitle>
+          <DialogContent>
+            {form?.map((formData: any) => (
+              <div key={formData.id}>
+                {selectedFormId === formData.id && (
+                  <>
+                    <h5>{formData.sub_name}</h5>
+                    <p>{formData.sub_address}</p>
+                    <p>{formData.product_name}</p>
+                    <p>{formData.accreditation_active_status}</p>
+                  </>
+                )}
+              </div>
+            ))}
+            <Switch
+              checked={formInput.verified_buyer}
+              onChange={(e:any) => {
+               
+                setFormInput({
+                  ...formInput,
+                  verified_buyer: !formInput.verified_buyer
+                });
+                console.log(!formInput.verified_buyer);
+                submitHandler(e)
+              }}
+              
+            />
+          </DialogContent>
+        </Dialog>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default Customer
+export default Customer;

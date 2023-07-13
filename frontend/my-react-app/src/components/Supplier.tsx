@@ -121,9 +121,9 @@ export const Supplier = () => {
     }
   };
 
-  useEffect(() => {
-    handleGetRequest();
-  }, []);
+  // React.useEffect(() => {
+  //   handleGetRequest();
+  // }, []);
   return (
     <>
       <Box
@@ -160,11 +160,11 @@ export const Supplier = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <Box>
+      {/* <Box>
         {buyerVerifiedForms.map((data)=>(
           <p>{data.verified_buyer}</p>
         ))}
-      </Box>
+      </Box> */}
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>SUPPLIER</DialogTitle>

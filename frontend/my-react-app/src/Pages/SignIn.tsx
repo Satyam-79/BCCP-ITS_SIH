@@ -104,8 +104,6 @@ export default function SignIn() {
           'Content-Type': 'application/json' // Set the appropriate content type for your request
         }
       });
-
-      
       
       localStorage.setItem("user_type", response.data.user_type);
     } catch (error) {
@@ -113,7 +111,6 @@ export default function SignIn() {
       console.error(error);
     }
   };
-    
  
 
   return (

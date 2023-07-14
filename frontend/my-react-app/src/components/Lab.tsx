@@ -22,7 +22,7 @@ export const Lab = () => {
 
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = useState([]);
-  const [selectedFormId, setSelectedFormId] = useState(null);
+  const [selectedFormId, setSelectedFormId] = useState<any>(null);
   const [formInput, setFormInput] = useState<any>({
     test_result_image: null,
     status: "Pending",
@@ -66,11 +66,11 @@ export const Lab = () => {
 
   const handleClickOpen = (formId:any) => {
     setSelectedFormId(formId);
+    localStorage.setItem('selectedFormId', formId.toString());
     console.log(selectedFormId);
 
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -103,7 +103,12 @@ export const Lab = () => {
     }
   };
 
-
+  useEffect(() => {
+    const storedFormId = String(localStorage.getItem('selectedFormId'));
+    if (storedFormId) {
+      setSelectedFormId(parseInt(storedFormId));
+    }
+  }, []);
 
 
   useEffect(() => {

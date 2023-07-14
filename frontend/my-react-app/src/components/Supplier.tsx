@@ -42,14 +42,8 @@ export const Supplier = () => {
   const data = [
     { id: 1, name: " Advanced Materials Testing Laboratory" },
     { id: 2, name: "Materials Analysis and Testing Laboratory" },
-    { id: 3, name: "Precision Testing Solutions" },
-    { id: 4, name: "Metallurgical Testing Services" },
-    { id: 5, name: "Composite Materials Testing Laboratory" },
-    { id: 6, name: "Structural Integrity Testing Lab" },
-    { id: 7, name: "National Test House for Chemicals" },
-    { id: 8, name: "TUV Rheinland" },
-    { id: 9, name: "Intertek" },
-    { id: 10, name: "Central Manufacturing Technology Institute" },
+    { id: 3, name: "Precision Testing Solutions" }
+
     // Add more objects as needed
   ];
 
@@ -62,7 +56,7 @@ export const Supplier = () => {
   console.log(randomObject);
 
   const handleChangeHandler = (e: any) => {
-    setSupplierForm((prevState:any) => ({
+    setSupplierForm((prevState: any) => ({
       ...prevState,
       [e.target.name]: e.target.value
     }));
@@ -73,17 +67,17 @@ export const Supplier = () => {
     const file = e.target.files[0];
 
     if (file) {
-      setSupplierForm((prevState:any) => ({
+      setSupplierForm((prevState: any) => ({
         ...prevState,
         [e.target.name]: file
       }));
     }
   };
 
-  const submitHandler = async (e:any) => {
+  const submitHandler = async (e: any) => {
     e.preventDefault();
     const formData = new FormData();
-
+    const token = String(localStorage.getItem("token"));
     // Append all the form values to the FormData object
     Object.keys(supplierForm).forEach((key: any) => {
       if (supplierForm[key] !== null) {
@@ -95,9 +89,16 @@ export const Supplier = () => {
       console.log(`${key}: ${value}`);
     });
     try {
-      const res:any= await axios.post(
+      const res: any = await axios.post(
         "https://bccp.onrender.com/send_supplier_form",
-        formData
+        formData,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data" // Set the appropriate content type for your request
+          }
+        }
       );
       console.log(res.data);
       window.alert("form is submitted");
@@ -125,7 +126,7 @@ export const Supplier = () => {
   const handleGetRequest = async () => {
     try {
       const token = String(localStorage.getItem("token"));
-      const response:any = await axios.get(
+      const response: any = await axios.get(
         `https://bccp.onrender.com/get_verified_buyer`,
         {
           headers: {
@@ -172,7 +173,7 @@ export const Supplier = () => {
               BACP
             </Typography>
             <Button color="inherit" onClick={handleClickOpen}>
-              Add Supplier
+              Add Product
             </Button>
             <Button onClick={handleLogout} color="inherit">
               Logout
@@ -397,6 +398,15 @@ export const Supplier = () => {
           </Box>
         </DialogContent>
       </Dialog>
+      <Typography
+          mx={3}
+          mt={3}
+          variant="h5"
+          component="div"
+          sx={{ flexGrow: 1, fontWeight: "600", color: "" }}
+        >
+          Supplier
+        </Typography>
 
       <Box p={3} sx={{ display: "flex" }}>
         {buyerVerifiedForms?.map((formData: any) => (
@@ -409,10 +419,14 @@ export const Supplier = () => {
           >
             <Box p={2}>
               <div className="float-right">
-                <Chip color="primary" icon={<DoneAllIcon />} label="Verified Buyer" />
+                <Chip
+                  color="primary"
+                  icon={<DoneAllIcon />}
+                  label="Verified Buyer"
+                />
               </div>
               <p>{formData.product_name}</p>
-              
+              <p>{formData.customer.username}</p>
             </Box>
           </Box>
         ))}

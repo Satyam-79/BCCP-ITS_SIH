@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -35,6 +34,8 @@ function Copyright(props: any) {
     </Typography>
   );
 }
+
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -142,7 +143,7 @@ export default function Signup() {
                       password: e.target.value
                     });
                   }}
-                />
+                />8
               </Grid>
               {/* <Grid item xs={12}>
                 <FormControlLabel
